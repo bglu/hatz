@@ -19,9 +19,12 @@ environments {
     development {
         dataSource {
             dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
-            url = "jdbc:mysql://192.168.178.39:3306/hatz"
-            username = "test"
-            password = "test"
+
+            uri = new URI(System.env.DATABASE_URL ?: "mysql://foo:bar@localhost:3306/foo")
+            username = uri.userInfo ? uri.userInfo.split(":")[0] : ""
+            password = uri.userInfo ? uri.userInfo.split(":")[1] : ""
+            url = "jdbc:mysql://" + uri.host + ":" + uri.port + uri.path
+
             driverClassName = "com.mysql.jdbc.Driver"
             dialect = "org.hibernate.dialect.MySQL5InnoDBDialect"
         }
